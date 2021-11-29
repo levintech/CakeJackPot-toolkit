@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
   .mobile-icon {
-    width: 32px;
+    width: 50px;
     ${({ theme }) => theme.mediaQueries.nav} {
       display: none;
     }
@@ -46,33 +46,33 @@ const StyledLink = styled(Link)`
 
 const StyledLogo = styled.img`
   margin-right: 16px;
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
 `;
 
 const StyledLogoWithTextIcon = styled.img`
   margin-left: 16px;
   margin-right: 32px;
-  width: 160px;
+  height: 50px;
 `;
 
 const Logo: React.FC<Props> = ({ isDark, href }) => {
   const isAbsoluteUrl = href.startsWith("http");
   const innerLogo = (
     <>
-      <StyledLogo className="mobile-icon" src="/images//logo.png"></StyledLogo>
-      <StyledLogoWithTextIcon className="desktop-icon" src="/images//LogoText.png"></StyledLogoWithTextIcon>
+      <StyledLogo className="mobile-icon" src="/images/logo.png"></StyledLogo>
+      <StyledLogoWithTextIcon className="desktop-icon" src="/images/LogoText.png"></StyledLogoWithTextIcon>
     </>
   );
 
   return (
     <Flex>
       {isAbsoluteUrl ? (
-        <StyledLink as="a" href={href} aria-label="Pancake home page">
+        <StyledLink as="a" href={href} aria-label="CakeJackPot home page">
           {innerLogo}
         </StyledLink>
       ) : (
-        <StyledLink to={href} aria-label="Pancake home page">
+        <StyledLink to={href} aria-label="CakeJackPot home page">
           {innerLogo}
         </StyledLink>
       )}

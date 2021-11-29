@@ -1,6 +1,7 @@
 import throttle from "lodash/throttle";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import BottomNav from "../../components/BottomNav";
 import { Box } from "../../components/Box";
 import Flex from "../../components/Box/Flex";
@@ -19,7 +20,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const StyledNav = styled.nav<{ showMenu: boolean }>`
+const StyledNav = styled.nav<{ showMenu: boolean; isHome: boolean }>`
   position: fixed;
   top: ${({ showMenu }) => (showMenu ? 0 : `-${MENU_HEIGHT}px`)};
   left: 0;
@@ -29,8 +30,7 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   align-items: center;
   width: 100%;
   height: ${MENU_HEIGHT}px;
-  background-color: ${({ theme }) => theme.nav.background};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  background-color: ${({ isHome, theme }) => isHome ? 'transparent' : theme.nav.background};
   z-index: 20;
   transform: translate3d(0, 0, 0);
 
@@ -38,9 +38,10 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   padding-right: 16px;
 `;
 
-const BodyWrapper = styled(Box)`
+const BodyWrapper = styled(Box)<{ isHome: boolean }>`
   position: relative;
   display: flex;
+  margin-top: ${({ isHome }) => (isHome ? 0 : `${MENU_HEIGHT}px`)};
 `;
 
 const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
@@ -70,6 +71,8 @@ const Menu: React.FC<NavProps> = ({
   const { isMobile } = useMatchBreakpoints();
   const [showMenu, setShowMenu] = useState(true);
   const refPrevOffset = useRef(window.pageYOffset);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -105,7 +108,7 @@ const Menu: React.FC<NavProps> = ({
 
   return (
     <Wrapper>
-      <StyledNav showMenu={showMenu}>
+      <StyledNav showMenu={showMenu} isHome={isHome}>
         <Flex>
           <Logo isDark={isDark} href={homeLink?.href ?? "/"} />
           {!isMobile && <MenuItems items={links} activeItem={activeItem} activeSubItem={activeSubItem} ml="24px" />}
@@ -130,7 +133,7 @@ const Menu: React.FC<NavProps> = ({
         </Flex>
       </StyledNav>
       {subLinks && <SubMenuItems items={subLinks} mt={`${MENU_HEIGHT + 1}px`} activeItem={activeSubItem} />}
-      <BodyWrapper mt={!subLinks ? `${MENU_HEIGHT + 1}px` : "0"}>
+      <BodyWrapper isHome={isHome}>
         <Inner isPushed={false} showMenu={showMenu}>
           {children}
           <Footer
